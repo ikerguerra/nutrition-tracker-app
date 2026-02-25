@@ -51,7 +51,7 @@ export default function RegisterScreen() {
                 <View className="w-full max-w-sm self-center space-y-6">
                     {/* Header */}
                     <View className="space-y-2 items-center mb-6">
-                        <View className="bg-primary/10 p-4 rounded-2xl mb-4">
+                        <View className="bg-green-100 dark:bg-green-950 p-4 rounded-2xl mb-4">
                             <Activity size={32} color="#16a34a" /> {/* Assuming primary green */}
                         </View>
                         <Text className="text-3xl font-bold tracking-tight text-black dark:text-white">
@@ -113,7 +113,7 @@ export default function RegisterScreen() {
                         </View>
 
                         {error ? (
-                            <View className="p-3 bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-900/50 rounded-lg mb-4">
+                            <View className="p-3 bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-lg mb-4">
                                 <Text className="text-sm text-red-600 dark:text-red-400 text-center font-medium">
                                     {error}
                                 </Text>

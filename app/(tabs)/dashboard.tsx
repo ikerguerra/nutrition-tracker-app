@@ -29,7 +29,7 @@ export default function DashboardScreen() {
             <View key={entry.id.toString()} className="bg-white dark:bg-zinc-900 rounded-2xl p-4 border border-gray-100 dark:border-zinc-800 mb-2">
                 <View className="flex-row justify-between items-center">
                     <View className="flex-row items-center flex-1">
-                        <View className="h-10 w-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl items-center justify-center mr-3">
+                        <View className="h-10 w-10 bg-blue-100 dark:bg-blue-950 rounded-xl items-center justify-center mr-3">
                             <Utensils size={20} color="#3b82f6" />
                         </View>
                         <View className="flex-1 pr-2">
@@ -56,7 +56,7 @@ export default function DashboardScreen() {
                                 {t('dashboard.greeting', { name: user?.firstName || 'User' }) || `Hello, ${user?.firstName || 'User'}`} 👋
                             </Text>
                         </View>
-                        <View className="h-10 w-10 bg-green-100 dark:bg-green-900/40 rounded-full items-center justify-center">
+                        <View className="h-10 w-10 bg-green-100 dark:bg-green-950 rounded-full items-center justify-center">
                             <Text className="text-green-700 dark:text-green-400 font-bold">
                                 {user?.firstName?.[0]?.toUpperCase() || 'U'}
                             </Text>

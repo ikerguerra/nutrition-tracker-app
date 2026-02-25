@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFoods } from '../../hooks/useFoods';
 import { FoodCard } from '../../components/FoodCard';
@@ -154,21 +154,27 @@ export default function FoodsScreen() {
                     </TouchableOpacity>
                 </View>
 
-                <View className="flex-row bg-gray-100 dark:bg-zinc-900 p-1 rounded-xl mb-4">
-                    {tabs.map(tab => (
-                        <TouchableOpacity
-                            key={tab.value}
-                            onPress={() => setActiveTab(tab.value)}
-                            className={activeTab === tab.value
-                                ? "flex-1 py-2 items-center justify-center rounded-lg bg-white dark:bg-zinc-800 shadow-sm"
-                                : "flex-1 py-2 items-center justify-center rounded-lg"}
-                        >
-                            <Text className={activeTab === tab.value
-                                ? "font-medium text-black dark:text-white text-xs"
-                                : "font-medium text-gray-500 dark:text-gray-400 text-xs"}
-                            >{tab.label}</Text>
-                        </TouchableOpacity>
-                    ))}
+                <View style={[foodStyles.tabBar, { backgroundColor: isDark ? '#18181b' : '#f3f4f6' }]}>
+                    {tabs.map(tab => {
+                        const isActive = activeTab === tab.value;
+                        return (
+                            <TouchableOpacity
+                                key={tab.value}
+                                onPress={() => setActiveTab(tab.value)}
+                                style={[
+                                    foodStyles.tabBtn,
+                                    isActive && [foodStyles.tabBtnActive, { backgroundColor: isDark ? '#3f3f46' : '#ffffff' }]
+                                ]}
+                            >
+                                <Text style={[
+                                    foodStyles.tabText,
+                                    { color: isActive ? (isDark ? '#ffffff' : '#000000') : (isDark ? '#9ca3af' : '#6b7280') }
+                                ]}>
+                                    {tab.label}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
                 </View>
 
                 {activeTab === 'all' && (
@@ -197,4 +203,29 @@ export default function FoodsScreen() {
     );
 }
 
-
+const foodStyles = StyleSheet.create({
+    tabBar: {
+        flexDirection: 'row',
+        borderRadius: 12,
+        padding: 4,
+        marginBottom: 16,
+    },
+    tabBtn: {
+        flex: 1,
+        paddingVertical: 8,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 8,
+    },
+    tabBtnActive: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    tabText: {
+        fontSize: 12,
+        fontWeight: '500',
+    },
+});

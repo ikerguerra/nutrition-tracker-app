@@ -42,7 +42,7 @@ const MealEntryCard: React.FC<MealEntryCardProps> = ({ entry, onUpdate, onDelete
                             onChangeText={setQuantity}
                             className="h-8 w-16 border border-gray-200 dark:border-zinc-700 rounded-md px-2 text-black dark:text-white dark:bg-zinc-900"
                         />
-                        <TouchableOpacity onPress={handleSave} className="p-2 bg-green-50 dark:bg-green-900/30 rounded-md">
+                        <TouchableOpacity onPress={handleSave} className="p-2 bg-green-50 dark:bg-green-950 rounded-md">
                             <Check size={16} color={isDark ? '#4ade80' : '#16a34a'} />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => setIsEditing(false)} className="p-2 bg-gray-50 dark:bg-zinc-800 rounded-md">
@@ -69,7 +69,7 @@ const MealEntryCard: React.FC<MealEntryCardProps> = ({ entry, onUpdate, onDelete
                     <TouchableOpacity onPress={() => setIsEditing(true)} className="p-2 bg-gray-50 dark:bg-zinc-900 rounded-xl">
                         <Pencil size={14} color={isDark ? '#9ca3af' : '#6b7280'} />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => onDelete(entry.id)} className="p-2 bg-red-50 dark:bg-red-900/20 rounded-xl">
+                    <TouchableOpacity onPress={() => onDelete(entry.id)} className="p-2 bg-red-50 dark:bg-red-950 rounded-xl">
                         <Trash2 size={14} color="#ef4444" />
                     </TouchableOpacity>
                 </View>

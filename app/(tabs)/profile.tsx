@@ -196,7 +196,7 @@ export default function ProfileScreen() {
                 {/* Calculated Goals */}
                 {profile?.dailyCalorieGoal && (
                     <SectionCard title="🎯 Objetivos Calculados">
-                        <View className="flex-row justify-between items-center mb-4 p-3 bg-orange-50 dark:bg-orange-900/20 rounded-xl">
+                        <View className="flex-row justify-between items-center mb-4 p-3 bg-orange-50 dark:bg-orange-950 rounded-xl">
                             <View className="flex-row items-center gap-2">
                                 <Flame size={18} color="#f97316" />
                                 <Text className="font-semibold text-black dark:text-white">Calorías diarias</Text>
@@ -204,15 +204,15 @@ export default function ProfileScreen() {
                             <Text className="text-xl font-bold text-orange-500">{Math.round(profile.dailyCalorieGoal)}</Text>
                         </View>
                         <View className="flex-row gap-3">
-                            <View className="flex-1 items-center p-3 bg-green-50 dark:bg-green-900/20 rounded-xl">
+                            <View className="flex-1 items-center p-3 bg-green-50 dark:bg-green-950 rounded-xl">
                                 <Text className="text-sm font-bold text-green-600">{Math.round(profile.dailyProteinGoal || 0)}g</Text>
                                 <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">Proteínas</Text>
                             </View>
-                            <View className="flex-1 items-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                            <View className="flex-1 items-center p-3 bg-blue-50 dark:bg-blue-950 rounded-xl">
                                 <Text className="text-sm font-bold text-blue-600">{Math.round(profile.dailyCarbsGoal || 0)}g</Text>
                                 <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">Carbos</Text>
                             </View>
-                            <View className="flex-1 items-center p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-xl">
+                            <View className="flex-1 items-center p-3 bg-yellow-50 dark:bg-yellow-950 rounded-xl">
                                 <Text className="text-sm font-bold text-yellow-600">{Math.round(profile.dailyFatsGoal || 0)}g</Text>
                                 <Text className="text-xs text-gray-500 dark:text-gray-400 mt-1">Grasas</Text>
                             </View>
@@ -303,7 +303,7 @@ export default function ProfileScreen() {
 
                 {/* Logout */}
                 <TouchableOpacity onPress={handleLogout}
-                    className="w-full p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 rounded-2xl flex-row items-center justify-center gap-2 mb-4">
+                    className="w-full p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-900 rounded-2xl flex-row items-center justify-center gap-2 mb-4">
                     <LogOut size={18} color="#ef4444" />
                     <Text className="text-red-600 font-semibold text-base">Cerrar sesión</Text>
                 </TouchableOpacity>

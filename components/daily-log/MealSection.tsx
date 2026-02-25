@@ -29,7 +29,7 @@ const MealSection: React.FC<MealSectionProps> = ({
 
     return (
         <View className="mb-6 bg-white dark:bg-zinc-950 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden">
-            <View className="flex-row items-center justify-between p-4 bg-gray-50/50 dark:bg-zinc-900/50 border-b border-gray-100 dark:border-zinc-800">
+            <View className="flex-row items-center justify-between p-4 bg-gray-50 dark:bg-zinc-900 border-b border-gray-100 dark:border-zinc-800">
                 <View className="flex-row items-center">
                     <Text className="text-lg font-bold text-black dark:text-white mr-2">{title}</Text>
                     {entries.length > 0 && (
@@ -66,7 +66,7 @@ const MealSection: React.FC<MealSectionProps> = ({
             {entries.length > 0 && (
                 <TouchableOpacity
                     onPress={() => onAddFood(mealType)}
-                    className="p-3 border-t border-gray-100 dark:border-zinc-800 items-center bg-gray-50/30 dark:bg-zinc-900/20"
+                    className="p-3 border-t border-gray-100 dark:border-zinc-800 items-center bg-gray-50 dark:bg-zinc-900"
                 >
                     <Text className="text-sm font-medium text-green-600 dark:text-green-500">Añadir más a {title.toLowerCase()}</Text>
                 </TouchableOpacity>

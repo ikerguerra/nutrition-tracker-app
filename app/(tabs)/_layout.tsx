@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Home, ClipboardList, ScanBarcode, User, CalendarDays } from 'lucide-react-native';
+import { Home, ClipboardList, ScanBarcode, User, CalendarDays, UtensilsCrossed } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 
 export default function TabsLayout() {
@@ -9,25 +9,28 @@ export default function TabsLayout() {
     return (
         <Tabs screenOptions={{
             headerShown: false,
-            tabBarActiveTintColor: isDark ? '#4ade80' : '#16a34a', // green-400 : green-600
-            tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280', // gray-400 : gray-500
+            tabBarActiveTintColor: isDark ? '#4ade80' : '#16a34a',
+            tabBarInactiveTintColor: isDark ? '#9ca3af' : '#6b7280',
             tabBarStyle: {
-                backgroundColor: isDark ? '#09090b' : '#ffffff', // zinc-950 : white
+                backgroundColor: isDark ? '#09090b' : '#ffffff',
                 borderTopWidth: 1,
-                borderTopColor: isDark ? '#27272a' : '#f3f4f6', // zinc-800 : gray-100
+                borderTopColor: isDark ? '#27272a' : '#f3f4f6',
+            },
+            tabBarLabelStyle: {
+                fontSize: 10,
             }
         }}>
             <Tabs.Screen
                 name="dashboard"
                 options={{
-                    title: 'Dashboard',
+                    title: 'Inicio',
                     tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="daily-log"
                 options={{
-                    title: 'Log',
+                    title: 'Diario',
                     tabBarIcon: ({ color, size }) => <ClipboardList size={size} color={color} />,
                 }}
             />
@@ -41,14 +44,21 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="foods"
                 options={{
-                    title: 'Foods',
+                    title: 'Alimentos',
+                    tabBarIcon: ({ color, size }) => <UtensilsCrossed size={size} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="calendar"
+                options={{
+                    title: 'Historial',
                     tabBarIcon: ({ color, size }) => <CalendarDays size={size} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="profile"
                 options={{
-                    title: 'Profile',
+                    title: 'Perfil',
                     tabBarIcon: ({ color, size }) => <User size={size} color={color} />,
                 }}
             />

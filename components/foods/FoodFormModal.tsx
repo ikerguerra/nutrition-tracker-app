@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     View, Text, TextInput, TouchableOpacity, Modal,
-    ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform,
+    ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform, StyleSheet
 } from 'react-native';
 import { X, Save } from 'lucide-react-native';
 import { useFoods } from '../../hooks/useFoods';
@@ -196,15 +196,23 @@ const FoodFormModal: React.FC<FoodFormModalProps> = ({ visible, onClose, onSucce
                         <View>
                             <Text className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-1.5">Unidad</Text>
                             <View className="flex-row gap-1">
-                                {(['g', 'ml'] as const).map(u => (
-                                    <TouchableOpacity
-                                        key={u}
-                                        onPress={() => setField('servingUnit', u)}
-                                        className={`h-11 px-4 rounded-xl justify-center border ${formData.servingUnit === u ? 'bg-green-600 border-green-600' : 'bg-gray-50 dark:bg-zinc-900 border-gray-200 dark:border-zinc-700'}`}
-                                    >
-                                        <Text className={`text-sm font-semibold ${formData.servingUnit === u ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>{u}</Text>
-                                    </TouchableOpacity>
-                                ))}
+                                {(['g', 'ml'] as const).map(u => {
+                                    const isSelected = formData.servingUnit === u;
+                                    return (
+                                        <TouchableOpacity
+                                            key={u}
+                                            onPress={() => setField('servingUnit', u)}
+                                            style={[
+                                                modalStyles.unitBtn,
+                                                isSelected ? modalStyles.unitBtnSelected : modalStyles.unitBtnUnselected
+                                            ]}
+                                        >
+                                            <Text style={isSelected ? modalStyles.unitBtnTextSelected : modalStyles.unitBtnTextUnselected}>
+                                                {u}
+                                            </Text>
+                                        </TouchableOpacity>
+                                    );
+                                })}
                             </View>
                         </View>
                     </View>
@@ -248,7 +256,11 @@ const FoodFormModal: React.FC<FoodFormModalProps> = ({ visible, onClose, onSucce
                     <TouchableOpacity
                         onPress={handleSubmit}
                         disabled={loading || !formData.name.trim()}
-                        className={`rounded-2xl p-4 items-center flex-row justify-center gap-2 mt-2 ${!formData.name.trim() ? 'opacity-50' : ''} ${loading ? 'bg-green-400' : 'bg-green-600'}`}
+                        style={[
+                            modalStyles.submitBtn,
+                            loading && modalStyles.submitBtnLoading,
+                            !formData.name.trim() && modalStyles.submitBtnDisabled,
+                        ]}
                     >
                         {loading ? <ActivityIndicator size="small" color="white" /> : <Save size={18} color="white" />}
                         <Text className="text-white font-bold text-base">
@@ -262,3 +274,49 @@ const FoodFormModal: React.FC<FoodFormModalProps> = ({ visible, onClose, onSucce
 };
 
 export default FoodFormModal;
+
+const modalStyles = StyleSheet.create({
+    // Unit selector (g / ml)
+    unitBtn: {
+        height: 44,
+        paddingHorizontal: 16,
+        borderRadius: 12,
+        justifyContent: 'center',
+        borderWidth: 1,
+    },
+    unitBtnSelected: {
+        backgroundColor: '#16a34a',
+        borderColor: '#16a34a',
+    },
+    unitBtnUnselected: {
+        backgroundColor: '#f9fafb',
+        borderColor: '#e5e7eb',
+    },
+    unitBtnTextSelected: {
+        color: '#ffffff',
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    unitBtnTextUnselected: {
+        color: '#374151',
+        fontSize: 14,
+        fontWeight: '600',
+    },
+    // Submit button
+    submitBtn: {
+        backgroundColor: '#16a34a',
+        borderRadius: 16,
+        padding: 16,
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        gap: 8,
+        marginTop: 8,
+    },
+    submitBtnLoading: {
+        backgroundColor: '#4ade80',
+    },
+    submitBtnDisabled: {
+        opacity: 0.5,
+    },
+});

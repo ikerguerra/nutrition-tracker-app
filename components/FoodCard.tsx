@@ -32,7 +32,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 {onToggleFavorite && id && (
                     <TouchableOpacity
                         onPress={() => onToggleFavorite(id)}
-                        className={`p-2 rounded-full ${isFavorite ? 'bg-red-50 dark:bg-red-900/30' : 'bg-gray-50 dark:bg-zinc-900'}`}
+                        className={`p-2 rounded-full ${isFavorite ? 'bg-red-50 dark:bg-red-950' : 'bg-gray-50 dark:bg-zinc-900'}`}
                     >
                         <Heart size={20} color={isFavorite ? '#ef4444' : '#9ca3af'} fill={isFavorite ? '#ef4444' : 'transparent'} />
                     </TouchableOpacity>
@@ -63,21 +63,21 @@ export const FoodCard: React.FC<FoodCardProps> = ({
             <View className="flex-row gap-2 mb-4">
                 <View className="flex-1 space-y-1">
                     <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.protein || 0}g</Text>
-                    <View className="h-1.5 w-full bg-blue-100 dark:bg-blue-900/40 rounded-full overflow-hidden">
+                    <View className="h-1.5 w-full bg-blue-100 dark:bg-blue-950 rounded-full overflow-hidden">
                         <View className="h-full bg-blue-500 w-full" />
                     </View>
                     <Text className="text-[10px] text-gray-500 text-center uppercase font-semibold">Prot</Text>
                 </View>
                 <View className="flex-1 space-y-1">
                     <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.carbohydrates || 0}g</Text>
-                    <View className="h-1.5 w-full bg-green-100 dark:bg-green-900/40 rounded-full overflow-hidden">
+                    <View className="h-1.5 w-full bg-green-100 dark:bg-green-950 rounded-full overflow-hidden">
                         <View className="h-full bg-green-500 w-full" />
                     </View>
                     <Text className="text-[10px] text-gray-500 text-center uppercase font-semibold">Carbs</Text>
                 </View>
                 <View className="flex-1 space-y-1">
                     <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.fats || 0}g</Text>
-                    <View className="h-1.5 w-full bg-orange-100 dark:bg-orange-900/40 rounded-full overflow-hidden">
+                    <View className="h-1.5 w-full bg-orange-100 dark:bg-orange-950 rounded-full overflow-hidden">
                         <View className="h-full bg-orange-500 w-full" />
                     </View>
                     <Text className="text-[10px] text-gray-500 text-center uppercase font-semibold">Fat</Text>
@@ -108,7 +108,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                             {onDelete && id && (
                                 <TouchableOpacity
                                     onPress={() => onDelete(id)}
-                                    className="p-3 bg-red-50 dark:bg-red-900/20 w-[42px] items-center justify-center rounded-xl"
+                                    className="p-3 bg-red-50 dark:bg-red-950 w-[42px] items-center justify-center rounded-xl"
                                 >
                                     <Trash2 size={18} color="#ef4444" />
                                 </TouchableOpacity>
