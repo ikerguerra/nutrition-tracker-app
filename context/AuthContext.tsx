@@ -20,9 +20,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<any | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const decodeToken = (token: string) => {
+    const decodeToken = (token: string): any => {
         try {
-            return jwtDecode(token);
+            const decoded: any = jwtDecode(token);
+            // Check if token is expired (exp is in seconds, Date.now() in ms)
+            if (decoded && decoded.exp && decoded.exp * 1000 < Date.now()) {
+                console.log("Token is expired");
+                return null;
+            }
+            return decoded;
         } catch (e) {
             console.error("Failed to decode token", e);
             return null;
@@ -34,8 +40,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             try {
                 const token = await authService.getCurrentToken();
                 if (token) {
-                    setIsAuthenticated(true);
-                    setUser(decodeToken(token));
+                    const decoded = decodeToken(token);
+                    if (decoded) {
+                        setIsAuthenticated(true);
+                        setUser(decoded);
+                    } else {
+                        // Token is invalid or expired, clear it
+                        await authService.logout();
+                        setIsAuthenticated(false);
+                        setUser(null);
+                    }
                 }
             } catch (e) {
                 console.error("Token check failed", e);
