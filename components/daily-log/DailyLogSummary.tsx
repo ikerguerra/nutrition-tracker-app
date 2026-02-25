@@ -8,26 +8,19 @@ interface DailyLogSummaryProps {
     error?: string | null;
 }
 
-const ProgressBar = ({ label, value, max, colorClass }: { label: string, value: number, max: number, colorClass: string }) => {
+const ProgressBar = ({ label, value, max, colorOverride }: { label: string, value: number, max: number, colorOverride: string }) => {
     const currentPercent = Math.min(100, Math.round((value / max) * 100)) || 0;
-
-    // Map tailwind bg colors to raw hex for the progress bar fill, or use tailwind classes directly if NativeWind supports it
-    // NativeWind supports standard bg- colors.
 
     return (
         <View className="mb-3">
             <View className="flex-row justify-between mb-1">
                 <Text className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">{label}</Text>
                 <Text className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                    {value.toFixed(1)} / {max}g
+                    {`${value.toFixed(1)} / ${max}g`}
                 </Text>
             </View>
             <View className="h-2 w-full bg-gray-200 dark:bg-zinc-800 rounded-full overflow-hidden flex-row">
-                {/* 
-                  Nativewind doesn't interpolate dynamic widths like `w-[50%]` easily using inline style is safer
-                  So we mix tailwind class for color and inline style for width 
-                */}
-                <View className={`h-full ${colorClass}`} style={{ width: `${currentPercent}%` }} />
+                <View className="h-full" style={{ width: `${currentPercent}%`, backgroundColor: colorOverride }} />
             </View>
         </View>
     );
@@ -72,7 +65,7 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                     <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-1">Calorías Totales</Text>
                     <View className="flex-row items-baseline gap-1">
                         <Text className="text-4xl font-extrabold text-black dark:text-white">{Math.round(currentCalories)}</Text>
-                        <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400">/ {calorieGoal} kcal</Text>
+                        <Text className="text-sm font-semibold text-gray-500 dark:text-gray-400">{`/ ${calorieGoal} kcal`}</Text>
                     </View>
                 </View>
 
@@ -81,19 +74,19 @@ const DailyLogSummary: React.FC<DailyLogSummaryProps> = ({ dailyLog, loading, er
                         label="Proteínas"
                         value={dailyLog.totals?.protein || 0}
                         max={proteinGoal}
-                        colorClass="bg-blue-500"
+                        colorOverride="#3b82f6"
                     />
                     <ProgressBar
                         label="Carbohidratos"
                         value={dailyLog.totals?.carbs || 0}
                         max={carbsGoal}
-                        colorClass="bg-green-500"
+                        colorOverride="#22c55e"
                     />
                     <ProgressBar
                         label="Grasas"
                         value={dailyLog.totals?.fats || 0}
                         max={fatsGoal}
-                        colorClass="bg-orange-500"
+                        colorOverride="#f97316"
                     />
                 </View>
             </View>

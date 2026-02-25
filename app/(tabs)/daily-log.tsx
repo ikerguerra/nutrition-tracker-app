@@ -37,10 +37,11 @@ export default function DailyLogScreen() {
     }, [dailyLog]);
 
     const handleAddFood = (mealType: MealType) => {
-        // Navigate to foods tab and pass mealType if we had a param, or we can just go to foods
-        // For now, just navigate to the foods screen. Later we can add a ?mealType context.
-        router.push('/(tabs)/foods');
-        // TODO: Pass context to the FoodsScreen so that clicking a food adds it to this mealType
+        const dateStr = dailyLog?.date || new Date().toISOString().split('T')[0];
+        router.push({
+            pathname: '/(tabs)/foods',
+            params: { mealType, date: dateStr }
+        });
     };
 
     const displayDate = React.useMemo(() => {

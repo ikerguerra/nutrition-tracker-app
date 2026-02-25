@@ -1,16 +1,26 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useBarcodeSearch } from '../../hooks/useBarcodeSearch';
 import { externalFoodService } from '../../services/externalFoodService';
 import { ScanBarcode, Info, CheckCircle2, AlertCircle } from 'lucide-react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import AddFoodToLogModal from '../../components/daily-log/AddFoodToLogModal';
+import { MealType } from '../../types/dailyLog';
 
 export default function ScannerScreen() {
+    const params = useLocalSearchParams<{ mealType?: MealType; date?: string }>();
+    const router = useRouter();
+    const pickerMealType = params.mealType;
+    const pickerDate = params.date || new Date().toISOString().split('T')[0];
+    const isPickerMode = !!pickerMealType;
+
     const [permission, requestPermission] = useCameraPermissions();
     const [scanned, setScanned] = useState(false);
     const { result, loading, error, searchByBarcode, reset } = useBarcodeSearch();
     const [importing, setImporting] = useState(false);
+    const [loggingFood, setLoggingFood] = useState(false); // Controls the modal
 
     useEffect(() => {
         if (!permission?.granted && permission?.canAskAgain) {
@@ -56,9 +66,9 @@ export default function ScannerScreen() {
         setImporting(true);
         try {
             await externalFoodService.importProduct(result.food.barcode);
-            alert("Food successfully saved to your database!");
+            Alert.alert("Éxito", "Alimento guardado en tu base de datos correctamente.");
         } catch (err) {
-            alert("Failed to import food.");
+            Alert.alert("Error", "No se pudo importar el alimento.");
         } finally {
             setImporting(false);
         }
@@ -140,7 +150,10 @@ export default function ScannerScreen() {
                                         <TouchableOpacity
                                             onPress={handleImportFood}
                                             disabled={importing}
-                                            className={`py-4 rounded-xl items-center ${importing ? 'bg-blue-400' : 'bg-blue-600'}`}
+                                            style={[
+                                                styles.importBtn,
+                                                importing ? styles.importBtnDisabled : styles.importBtnActive
+                                            ]}
                                         >
                                             {importing ? (
                                                 <ActivityIndicator color="white" />
@@ -154,7 +167,17 @@ export default function ScannerScreen() {
                                     </View>
                                 ) : (
                                     <View className="space-y-3">
-                                        <TouchableOpacity className="py-4 rounded-xl items-center bg-green-600">
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                if (isPickerMode) {
+                                                    setLoggingFood(true);
+                                                } else {
+                                                    // Quick add without context -> go to diary
+                                                    router.push('/(tabs)/daily-log');
+                                                }
+                                            }}
+                                            className="py-4 rounded-xl items-center bg-green-600"
+                                        >
                                             <Text className="text-white font-semibold">Log this item</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={handleScanAgain} className="py-4 rounded-xl items-center bg-gray-100 dark:bg-zinc-800">
@@ -167,6 +190,35 @@ export default function ScannerScreen() {
                     </View>
                 )}
             </View>
+
+            {/* Add Food Context Modal */}
+            {isPickerMode && result?.food && (
+                <AddFoodToLogModal
+                    visible={loggingFood}
+                    food={result.food}
+                    mealType={pickerMealType as MealType}
+                    targetDate={pickerDate}
+                    onClose={() => setLoggingFood(false)}
+                    onSuccess={() => {
+                        setLoggingFood(false);
+                        router.push('/(tabs)/daily-log');
+                    }}
+                />
+            )}
         </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    importBtn: {
+        paddingVertical: 16,
+        borderRadius: 12,
+        alignItems: 'center',
+    },
+    importBtnActive: {
+        backgroundColor: '#2563eb', // blue-600
+    },
+    importBtnDisabled: {
+        backgroundColor: '#60a5fa', // blue-400
+    }
+});

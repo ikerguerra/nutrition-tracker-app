@@ -33,11 +33,15 @@ export default function DashboardScreen() {
                             <Utensils size={20} color="#3b82f6" />
                         </View>
                         <View className="flex-1 pr-2">
-                            <Text className="font-semibold text-black dark:text-white text-base capitalize">{entry.mealType.replace('_', ' ').toLowerCase()}</Text>
-                            <Text className="text-gray-500 dark:text-gray-400 text-sm" numberOfLines={1}>{entry.foodName}</Text>
+                            <Text className="font-semibold text-black dark:text-white text-base capitalize">
+                                {(entry.mealType || 'UNKNOWN').replace('_', ' ').toLowerCase()}
+                            </Text>
+                            <Text className="text-gray-500 dark:text-gray-400 text-sm" numberOfLines={1}>
+                                {entry.foodName || 'Alimento desconocido'}
+                            </Text>
                         </View>
                     </View>
-                    <Text className="font-bold text-black dark:text-white">{Math.round(entry.calories || 0)} kcal</Text>
+                    <Text className="font-bold text-black dark:text-white">{`${Math.round(entry.calories || 0)} kcal`}</Text>
                 </View>
             </View>
         ));
@@ -53,7 +57,7 @@ export default function DashboardScreen() {
                                 {new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' })}
                             </Text>
                             <Text className="text-2xl font-bold text-black dark:text-white mt-1">
-                                {t('dashboard.greeting', { name: user?.firstName || 'User' }) || `Hello, ${user?.firstName || 'User'}`} 👋
+                                {`${t('dashboard.greeting', { name: user?.firstName || 'User' }) || `Hello, ${user?.firstName || 'User'}`} 👋`}
                             </Text>
                         </View>
                         <View className="h-10 w-10 bg-green-100 dark:bg-green-950 rounded-full items-center justify-center">
@@ -68,10 +72,10 @@ export default function DashboardScreen() {
                         <Text className="text-lg font-bold text-white mb-4">
                             {t('dashboard.addFoodTitle') || '¿Qué has comido hoy?'}
                         </Text>
-                        <TouchableOpacity onPress={() => router.push('/(tabs)/foods')} className="flex-row items-center bg-white/20 rounded-xl p-3">
+                        <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="flex-row items-center bg-white/20 rounded-xl p-3">
                             <Search size={20} color="#ffffff" className="mr-3" />
                             <Text className="text-green-50 font-medium">
-                                {t('dashboard.searchFoodBtn') || 'Buscar alimentos...'}
+                                {t('dashboard.searchFoodBtn') || 'Ir al diario para añadir...'}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -84,14 +88,14 @@ export default function DashboardScreen() {
                             <View className="flex-1 bg-white dark:bg-zinc-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-800 mr-2">
                                 <Text className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Calorías</Text>
                                 <Text className="text-xl font-bold text-black dark:text-white">
-                                    {Math.round(dailyLog?.totals?.calories || 0)}
-                                    <Text className="text-sm font-normal text-gray-500"> / {dailyLog?.goals?.calorieGoal || 2000}</Text>
+                                    {`${Math.round(dailyLog?.totals?.calories || 0)}`}
+                                    <Text className="text-sm font-normal text-gray-500">{` / ${dailyLog?.goals?.calorieGoal || 2000}`}</Text>
                                 </Text>
                             </View>
                             <View className="flex-1 bg-white dark:bg-zinc-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-800 ml-2">
                                 <Text className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">Proteínas</Text>
                                 <Text className="text-xl font-bold text-black dark:text-white">
-                                    {Math.round(dailyLog?.totals?.protein || 0)}g
+                                    {`${Math.round(dailyLog?.totals?.protein || 0)}g`}
                                 </Text>
                             </View>
                         </View>

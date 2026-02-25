@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Heart, Edit2, Trash2, Plus, Flame } from 'lucide-react-native';
 import type { Food } from '../types/food';
 
@@ -32,7 +32,10 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 {onToggleFavorite && id && (
                     <TouchableOpacity
                         onPress={() => onToggleFavorite(id)}
-                        className={`p-2 rounded-full ${isFavorite ? 'bg-red-50 dark:bg-red-950' : 'bg-gray-50 dark:bg-zinc-900'}`}
+                        style={[
+                            foodCardStyles.favBtn,
+                            isFavorite ? foodCardStyles.favBtnActive : foodCardStyles.favBtnInactive
+                        ]}
                     >
                         <Heart size={20} color={isFavorite ? '#ef4444' : '#9ca3af'} fill={isFavorite ? '#ef4444' : 'transparent'} />
                     </TouchableOpacity>
@@ -120,3 +123,16 @@ export const FoodCard: React.FC<FoodCardProps> = ({
         </View>
     );
 };
+
+const foodCardStyles = StyleSheet.create({
+    favBtn: {
+        padding: 8,
+        borderRadius: 9999,
+    },
+    favBtnActive: {
+        backgroundColor: '#fef2f2', // red-50
+    },
+    favBtnInactive: {
+        backgroundColor: '#f9fafb', // gray-50
+    }
+});

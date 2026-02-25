@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     View, Text, TouchableOpacity, ScrollView, TextInput,
-    ActivityIndicator, Alert
+    ActivityIndicator, Alert, StyleSheet
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -32,12 +32,17 @@ const PickerRow: React.FC<PickerRowProps> = ({ label, value, options, onChange }
                         <TouchableOpacity
                             key={opt.value}
                             onPress={() => onChange(opt.value)}
-                            className={`px-3 py-2 rounded-xl border ${isActive
-                                ? 'bg-green-600 border-green-600'
-                                : 'bg-white dark:bg-zinc-900 border-gray-200 dark:border-zinc-700'
-                                }`}
+                            style={[
+                                pickerStyles.btn,
+                                isActive
+                                    ? pickerStyles.btnActive
+                                    : (isDark ? pickerStyles.btnInactiveDark : pickerStyles.btnInactiveLight)
+                            ]}
                         >
-                            <Text className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-700 dark:text-gray-300'}`}>
+                            <Text
+                                className="text-sm font-medium"
+                                style={isActive ? pickerStyles.textActive : (isDark ? pickerStyles.textInactiveDark : pickerStyles.textInactiveLight)}
+                            >
                                 {opt.label}
                             </Text>
                         </TouchableOpacity>
@@ -279,7 +284,9 @@ export default function ProfileScreen() {
 
                 {/* Save Button */}
                 <TouchableOpacity onPress={handleSave} disabled={saving}
-                    className={`rounded-2xl p-4 items-center flex-row justify-center gap-2 mb-6 ${saving ? 'bg-green-400' : 'bg-green-600'}`}>
+                    className="rounded-2xl p-4 items-center flex-row justify-center gap-2 mb-6"
+                    style={{ backgroundColor: saving ? '#4ade80' : '#16a34a' }}
+                >
                     {saving
                         ? <ActivityIndicator size="small" color="white" />
                         : <Save size={18} color="white" />
@@ -312,3 +319,33 @@ export default function ProfileScreen() {
         </SafeAreaView>
     );
 }
+
+const pickerStyles = StyleSheet.create({
+    btn: {
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderRadius: 12,
+        borderWidth: 1,
+    },
+    btnActive: {
+        backgroundColor: '#16a34a',
+        borderColor: '#16a34a',
+    },
+    btnInactiveLight: {
+        backgroundColor: '#ffffff',
+        borderColor: '#e5e7eb',
+    },
+    btnInactiveDark: {
+        backgroundColor: '#18181b', // zinc-900
+        borderColor: '#3f3f46', // zinc-700
+    },
+    textActive: {
+        color: '#ffffff',
+    },
+    textInactiveLight: {
+        color: '#374151',
+    },
+    textInactiveDark: {
+        color: '#d4d4d8',
+    }
+});

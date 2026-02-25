@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, FlatList, ActivityIndicator, Alert, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useFoods } from '../../hooks/useFoods';
 import { FoodCard } from '../../components/FoodCard';
 import { SearchBar } from '../../components/SearchBar';
-import { PackageOpen, Plus } from 'lucide-react-native';
+import { PackageOpen, Plus, X } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import FoodFormModal from '../../components/foods/FoodFormModal';
+import AddFoodToLogModal from '../../components/daily-log/AddFoodToLogModal';
 import { Food } from '../../types/food';
+import { MealType } from '../../types/dailyLog';
 
 type TabType = 'all' | 'favorites' | 'recent' | 'frequent';
 
@@ -20,10 +23,17 @@ export default function FoodsScreen() {
     } = useFoods();
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
+    const params = useLocalSearchParams<{ mealType?: MealType; date?: string }>();
+    const router = useRouter();
+
+    const pickerMealType = params.mealType;
+    const pickerDate = params.date || new Date().toISOString().split('T')[0];
+    const isPickerMode = !!pickerMealType;
 
     const [activeTab, setActiveTab] = useState<TabType>('all');
     const [showForm, setShowForm] = useState(false);
     const [editingFood, setEditingFood] = useState<Food | null>(null);
+    const [addingFood, setAddingFood] = useState<Food | null>(null);
     const isFirstRun = React.useRef(true);
 
     useEffect(() => {
@@ -126,8 +136,9 @@ export default function FoodsScreen() {
                         food={item}
                         isFavorite={item.id ? favoriteIds.includes(item.id) : false}
                         onToggleFavorite={handleToggleFavorite}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
+                        onEdit={isPickerMode ? undefined : handleEdit}
+                        onDelete={isPickerMode ? undefined : handleDelete}
+                        onAddToDailyLog={isPickerMode ? () => setAddingFood(item) : undefined}
                     />
                 )}
             />
@@ -143,6 +154,17 @@ export default function FoodsScreen() {
 
     return (
         <SafeAreaView edges={['top']} className="flex-1 bg-white dark:bg-zinc-950">
+            {isPickerMode && (
+                <View className="bg-green-600 px-4 py-3 flex-row items-center justify-between">
+                    <Text className="text-white font-semibold">
+                        Añadiendo a: <Text className="font-bold">{pickerMealType.replace('_', ' ')}</Text>
+                    </Text>
+                    <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="p-1 bg-white/20 rounded-full">
+                        <X size={16} color="white" />
+                    </TouchableOpacity>
+                </View>
+            )}
+
             <View className="px-4 py-3 border-b border-gray-100 dark:border-zinc-800">
                 <View className="flex-row items-center justify-between mb-4">
                     <Text className="text-2xl font-bold text-black dark:text-white">Alimentos</Text>
@@ -199,6 +221,20 @@ export default function FoodsScreen() {
                 onSuccess={handleFormSuccess}
                 initialData={editingFood}
             />
+
+            {isPickerMode && (
+                <AddFoodToLogModal
+                    visible={!!addingFood}
+                    food={addingFood}
+                    mealType={pickerMealType as MealType}
+                    targetDate={pickerDate}
+                    onClose={() => setAddingFood(null)}
+                    onSuccess={() => {
+                        setAddingFood(null);
+                        router.push('/(tabs)/daily-log');
+                    }}
+                />
+            )}
         </SafeAreaView>
     );
 }

@@ -122,8 +122,9 @@ export default function RegisterScreen() {
 
                         <TouchableOpacity
                             onPress={handleRegister}
-                            disabled={loading}
-                            className={`h-12 bg-green-600 rounded-lg flex-row items-center justify-center ${loading ? 'opacity-70' : ''}`}
+                            disabled={loading || !formData.firstName || !formData.lastName || !formData.email || !formData.password}
+                            className="h-12 bg-green-600 rounded-lg flex-row items-center justify-center"
+                            style={{ opacity: loading ? 0.7 : 1 }}
                         >
                             {loading ? (
                                 <ActivityIndicator color="white" />
