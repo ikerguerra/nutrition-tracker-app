@@ -218,5 +218,48 @@
         "sectionLocked": "Por desbloquear",
         "unlockedOn": "Desbloqueado el {{date}}",
         "empty": "Empieza a registrar tu dieta para desbloquear logros"
+    },
+    "recipes": {
+        "title": "Recetas",
+        "addRecipe": "Nueva Receta",
+        "editRecipe": "Editar Receta",
+        "ingredients": "Ingredientes",
+        "add": "AÑADIR",
+        "delete": "ELIMINAR",
+        "instructions": "Instrucciones",
+        "servings": "Raciones",
+        "prepTime": "Prep (min)",
+        "cookTime": "Cocción (min)",
+        "searchIngredient": "Buscar Ingrediente",
+        "noIngredients": "No hay ingredientes aún",
+        "saveRecipe": "Guardar Receta",
+        "saving": "Guardando...",
+        "recipeName": "Nombre de la receta",
+        "placeholders": {
+            "name": "Ej. Lasaña de verduras",
+            "instructions": "Paso a paso...",
+            "search": "Escribe para buscar..."
+        },
+        "errors": {
+            "missingData": "La receta debe tener un nombre y al menos un ingrediente.",
+            "saveFailed": "No se pudo guardar la receta."
+        }
+    },
+    "stats": {
+        "title": "Estadísticas",
+        "weightTrend": "Progreso de Peso",
+        "dailyCalories": "Calorías Diarias",
+        "currentStreak": "Racha Actual",
+        "days": "Días",
+        "daysLogged": "Días Registrados",
+        "avgCalories": "Promedio Calorías",
+        "insufficientData": "Insuficientes datos para mostrar gráficos",
+        "noWeight": "Insuficientes datos de peso",
+        "periods": {
+            "week": "Semana",
+            "month": "Mes",
+            "threeMonths": "90 días"
+        },
+        "streakDesc": "Has cumplido tus objetivos {{achieved}} de los últimos {{total}} días."
     }
 }

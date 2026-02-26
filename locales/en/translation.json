@@ -218,5 +218,48 @@
         "sectionLocked": "Locked",
         "unlockedOn": "Unlocked on {{date}}",
         "empty": "Start logging your diet to unlock achievements"
+    },
+    "recipes": {
+        "title": "Recipes",
+        "addRecipe": "New Recipe",
+        "editRecipe": "Edit Recipe",
+        "ingredients": "Ingredients",
+        "add": "ADD",
+        "delete": "DELETE",
+        "instructions": "Instructions",
+        "servings": "Servings",
+        "prepTime": "Prep (min)",
+        "cookTime": "Cook (min)",
+        "searchIngredient": "Search Ingredient",
+        "noIngredients": "No ingredients yet",
+        "saveRecipe": "Save Recipe",
+        "saving": "Saving...",
+        "recipeName": "Recipe Name",
+        "placeholders": {
+            "name": "e.g. Veggie Lasagna",
+            "instructions": "Step by step...",
+            "search": "Type to search..."
+        },
+        "errors": {
+            "missingData": "Recipe must have a name and at least one ingredient.",
+            "saveFailed": "Could not save recipe."
+        }
+    },
+    "stats": {
+        "title": "Stats",
+        "weightTrend": "Weight Progress",
+        "dailyCalories": "Daily Calories",
+        "currentStreak": "Current Streak",
+        "days": "Days",
+        "daysLogged": "Days Logged",
+        "avgCalories": "Avg Calories",
+        "insufficientData": "Insufficient data to show charts",
+        "noWeight": "Insufficient weight data",
+        "periods": {
+            "week": "Week",
+            "month": "Month",
+            "threeMonths": "90 days"
+        },
+        "streakDesc": "You met your goals {{achieved}} out of the last {{total}} days."
     }
 }

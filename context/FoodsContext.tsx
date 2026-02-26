@@ -57,7 +57,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             setError(null);
             try {
                 const response: Page<Food> = await foodService.getAllFoods({ page, size });
-                setFoods(response.content);
+                setFoods(response?.content || []);
                 setPagination({
                     page: response.number,
                     size: response.size,
@@ -123,7 +123,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setError(null);
         try {
             const response = await foodService.searchFoods(query, { category, filters });
-            setFoods(response.content);
+            setFoods(response?.content || []);
             setPagination({
                 page: response.number,
                 size: response.size,
@@ -171,7 +171,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setError(null);
         try {
             const data = await foodService.getFavorites();
-            setFoods(data);
+            setFoods(Array.isArray(data) ? data : []);
             setPagination({
                 page: 0,
                 size: data.length,
@@ -190,7 +190,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setError(null);
         try {
             const data = await foodService.getRecentFoods();
-            setFoods(data);
+            setFoods(Array.isArray(data) ? data : []);
             setPagination({
                 page: 0,
                 size: data.length,
@@ -209,7 +209,7 @@ export const FoodsProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         setError(null);
         try {
             const data = await foodService.getFrequentFoods();
-            setFoods(data);
+            setFoods(Array.isArray(data) ? data : []);
             setPagination({
                 page: 0,
                 size: data.length,

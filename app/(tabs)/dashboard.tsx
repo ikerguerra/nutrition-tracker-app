@@ -72,7 +72,7 @@ export default function DashboardScreen() {
                         <Text className="text-lg font-bold text-white mb-4">
                             {t('dashboard.addFoodTitle') || '¿Qué has comido hoy?'}
                         </Text>
-                        <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="flex-row items-center bg-white/20 rounded-xl p-3">
+                        <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="flex-row items-center bg-green-700 rounded-xl p-3">
                             <Search size={20} color="#ffffff" className="mr-3" />
                             <Text className="text-green-50 font-medium">
                                 {t('dashboard.searchFoodBtn') || 'Ir al diario para añadir...'}

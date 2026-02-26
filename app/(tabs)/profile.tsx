@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { LogOut, Moon, Sun, Monitor, Save, Flame, Target, User } from 'lucide-react-native';
+import { LogOut, Moon, Sun, Monitor, Save, Flame, Target, User, TrendingUp, ChevronRight } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import userProfileService from '../../services/userProfileService';
@@ -175,7 +175,7 @@ export default function ProfileScreen() {
 
                 {/* Profile Summary Card */}
                 <View className="bg-green-600 rounded-3xl p-5 mb-6 flex-row items-center gap-4">
-                    <View className="h-16 w-16 bg-white/20 rounded-full items-center justify-center">
+                    <View className="h-16 w-16 bg-green-700 rounded-full items-center justify-center">
                         <Text className="text-3xl font-bold text-white">
                             {user?.firstName?.[0]?.toUpperCase() || 'U'}
                         </Text>
@@ -185,12 +185,12 @@ export default function ProfileScreen() {
                         <Text className="text-green-100 text-sm mt-0.5">{user?.email}</Text>
                         <View className="flex-row gap-3 mt-2">
                             {bmi && (
-                                <View className="bg-white/20 px-2.5 py-1 rounded-full">
+                                <View className="bg-green-700 px-2.5 py-1 rounded-full">
                                     <Text className="text-white text-xs font-semibold">IMC: {bmi}</Text>
                                 </View>
                             )}
                             {profile?.weight && (
-                                <View className="bg-white/20 px-2.5 py-1 rounded-full">
+                                <View className="bg-green-700 px-2.5 py-1 rounded-full">
                                     <Text className="text-white text-xs font-semibold">{profile.weight} kg</Text>
                                 </View>
                             )}
@@ -298,6 +298,15 @@ export default function ProfileScreen() {
 
                 {/* Preferences */}
                 <SectionCard title="⚙️ Preferencias">
+                    <TouchableOpacity onPress={() => router.push('/stats')}
+                        className="flex-row items-center justify-between py-2 border-b border-gray-50 dark:border-zinc-900 mb-2">
+                        <View className="flex-row items-center gap-3">
+                            <TrendingUp size={18} color="#16a34a" />
+                            <Text className="text-black dark:text-white font-medium">Gráficos y Estadísticas</Text>
+                        </View>
+                        <ChevronRight size={18} color="#9ca3af" />
+                    </TouchableOpacity>
+
                     <TouchableOpacity onPress={cycleTheme}
                         className="flex-row items-center justify-between py-2">
                         <View className="flex-row items-center gap-3">

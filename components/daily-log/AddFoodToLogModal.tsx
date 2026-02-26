@@ -8,10 +8,11 @@ import { Food } from '../../types/food';
 import { useDailyLog } from '../../hooks/useDailyLog';
 import { useColorScheme } from 'nativewind';
 import { MealType } from '../../types/dailyLog';
+import { Recipe } from '../../types/recipe';
 
 interface AddFoodToLogModalProps {
     visible: boolean;
-    food: Food | null;
+    item: Food | Recipe | null;
     mealType: MealType;
     targetDate: string; // YYYY-MM-DD
     onClose: () => void;
@@ -19,7 +20,7 @@ interface AddFoodToLogModalProps {
 }
 
 const AddFoodToLogModal: React.FC<AddFoodToLogModalProps> = ({
-    visible, food, mealType, targetDate, onClose, onSuccess
+    visible, item, mealType, targetDate, onClose, onSuccess
 }) => {
     const { addEntry, loading } = useDailyLog(targetDate);
     const { colorScheme } = useColorScheme();
@@ -29,34 +30,45 @@ const AddFoodToLogModal: React.FC<AddFoodToLogModalProps> = ({
     const [unit, setUnit] = useState('g');
 
     useEffect(() => {
-        if (visible && food) {
-            setQuantity(food.servingSize?.toString() || '100');
-            setUnit(food.servingUnit || 'g');
+        if (visible && item) {
+            if ('servingSize' in item) {
+                const foodItem = item as any;
+                setQuantity(foodItem.servingSize?.toString() || '100');
+                setUnit(foodItem.servingUnit || 'g');
+            } else {
+                const recipeItem = item as any;
+                setQuantity(recipeItem.servings?.toString() || '1');
+                setUnit('raciones');
+            }
         }
-    }, [visible, food]);
+    }, [visible, item]);
 
     const handleConfirm = async () => {
-        if (!food || !food.id) return;
+        if (!item || !item.id) return;
         const qtyNum = parseFloat(quantity);
         if (isNaN(qtyNum) || qtyNum <= 0) return;
+
+        const isFood = 'servingSize' in item;
 
         try {
             await addEntry({
                 date: targetDate,
                 mealType: mealType,
-                foodId: food.id,
+                foodId: isFood ? item.id : undefined,
+                recipeId: !isFood ? item.id : undefined,
                 quantity: qtyNum,
                 unit: unit
             });
             onSuccess?.();
             onClose();
         } catch (err) {
-            console.error('Error adding food:', err);
-            alert('No se pudo añadir el alimento');
+            console.error('Error adding item:', err);
+            alert('No se pudo añadir el elemento');
         }
     };
 
-    if (!food) return null;
+    if (!item) return null;
+    const isFood = 'servingSize' in item;
 
     const mealTypeLabels: Record<string, string> = {
         BREAKFAST: 'Desayuno', LUNCH: 'Almuerzo', DINNER: 'Cena',
@@ -79,8 +91,10 @@ const AddFoodToLogModal: React.FC<AddFoodToLogModalProps> = ({
                 <View className="px-5 pt-6">
                     {/* Food Summary */}
                     <View className="bg-gray-50 dark:bg-zinc-900 rounded-2xl p-4 mb-6 border border-gray-100 dark:border-zinc-800">
-                        <Text className="text-lg font-bold text-black dark:text-white mb-1">{food.name}</Text>
-                        <Text className="text-sm text-gray-500 dark:text-gray-400 mb-3">{food.brand || 'Alimento genérico'}</Text>
+                        <Text className="text-lg font-bold text-black dark:text-white mb-1">{item.name}</Text>
+                        <Text className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                            {isFood ? ((item as any).brand || 'Alimento genérico') : 'Receta personalizada'}
+                        </Text>
 
                         <View className="flex-row items-center gap-2">
                             <View className="bg-green-100 dark:bg-green-950 px-3 py-1.5 rounded-full">
@@ -111,7 +125,7 @@ const AddFoodToLogModal: React.FC<AddFoodToLogModalProps> = ({
                         <View>
                             <Text className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase mb-2">Unidad</Text>
                             <View className="flex-row gap-1">
-                                {(['g', 'ml'] as const).map(u => {
+                                {(isFood ? ['g', 'ml'] : ['raciones']).map(u => {
                                     const isSelected = unit === u;
                                     return (
                                         <TouchableOpacity

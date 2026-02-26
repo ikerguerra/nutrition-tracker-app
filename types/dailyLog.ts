@@ -27,6 +27,7 @@ export interface MealEntry {
     carbs: number;
     fats: number;
     food?: Food;
+    recipeId?: number;
 }
 
 export interface DailyLog {
@@ -51,7 +52,8 @@ export interface DailyLog {
 export interface AddEntryRequest {
     date: string;
     mealType: MealType;
-    foodId: number;
+    foodId?: number;
+    recipeId?: number;
     quantity: number;
     unit: string;
     servingUnitId?: number;
@@ -64,4 +66,5 @@ export interface UpdateEntryRequest {
     date?: string;
     mealType?: MealType;
     foodId?: number;
+    recipeId?: number;
 }

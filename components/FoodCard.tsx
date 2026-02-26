@@ -49,7 +49,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                     </View>
                     <View>
                         <Text className="text-base font-bold text-black dark:text-white leading-tight">
-                            {nutritionalInfo?.calories || 0}
+                            {`${nutritionalInfo?.calories || 0}`}
                         </Text>
                         <Text className="text-xs text-gray-500 font-semibold uppercase">kcal</Text>
                     </View>
@@ -57,7 +57,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({
                 {servingSize && servingUnit && (
                     <View className="pl-4 border-l border-gray-200 dark:border-zinc-700">
                         <Text className="text-sm font-semibold text-black dark:text-white text-right">
-                            {servingSize} <Text className="font-normal text-gray-500 text-xs">{servingUnit}</Text>
+                            {`${servingSize}`} <Text className="font-normal text-gray-500 text-xs">{servingUnit}</Text>
                         </Text>
                     </View>
                 )}
@@ -65,21 +65,21 @@ export const FoodCard: React.FC<FoodCardProps> = ({
 
             <View className="flex-row gap-2 mb-4">
                 <View className="flex-1 space-y-1">
-                    <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.protein || 0}g</Text>
+                    <Text className="text-sm font-bold text-black dark:text-white text-center">{`${nutritionalInfo?.protein || 0}g`}</Text>
                     <View className="h-1.5 w-full bg-blue-100 dark:bg-blue-950 rounded-full overflow-hidden">
                         <View className="h-full bg-blue-500 w-full" />
                     </View>
                     <Text className="text-[10px] text-gray-500 text-center uppercase font-semibold">Prot</Text>
                 </View>
                 <View className="flex-1 space-y-1">
-                    <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.carbohydrates || 0}g</Text>
+                    <Text className="text-sm font-bold text-black dark:text-white text-center">{`${nutritionalInfo?.carbohydrates || 0}g`}</Text>
                     <View className="h-1.5 w-full bg-green-100 dark:bg-green-950 rounded-full overflow-hidden">
                         <View className="h-full bg-green-500 w-full" />
                     </View>
                     <Text className="text-[10px] text-gray-500 text-center uppercase font-semibold">Carbs</Text>
                 </View>
                 <View className="flex-1 space-y-1">
-                    <Text className="text-sm font-bold text-black dark:text-white text-center">{nutritionalInfo?.fats || 0}g</Text>
+                    <Text className="text-sm font-bold text-black dark:text-white text-center">{`${nutritionalInfo?.fats || 0}g`}</Text>
                     <View className="h-1.5 w-full bg-orange-100 dark:bg-orange-950 rounded-full overflow-hidden">
                         <View className="h-full bg-orange-500 w-full" />
                     </View>

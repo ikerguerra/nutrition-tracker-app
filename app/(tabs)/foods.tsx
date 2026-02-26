@@ -8,19 +8,27 @@ import { SearchBar } from '../../components/SearchBar';
 import { PackageOpen, Plus, X } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 import FoodFormModal from '../../components/foods/FoodFormModal';
+import RecipeFormModal from '../../components/recipes/RecipeFormModal';
 import AddFoodToLogModal from '../../components/daily-log/AddFoodToLogModal';
 import { Food } from '../../types/food';
 import { MealType } from '../../types/dailyLog';
+import { Recipe } from '../../types/recipe';
+import { useRecipes } from '../../hooks/useRecipes';
+import { RecipeCard } from '../../components/recipes/RecipeCard';
 
-type TabType = 'all' | 'favorites' | 'recent' | 'frequent';
+type TabType = 'all' | 'favorites' | 'recent' | 'frequent' | 'recipes';
 
 export default function FoodsScreen() {
     const {
-        foods, loading, error, favoriteIds,
+        foods, loading: foodsLoading, error: foodsError, favoriteIds,
         refresh, loadFavorites, loadRecent, loadFrequent,
         addFavorite, removeFavorite, searchFoods,
         deleteFood,
     } = useFoods();
+    const {
+        recipes, loading: recipesLoading, error: recipesError,
+        loadRecipes, deleteRecipe
+    } = useRecipes();
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
     const params = useLocalSearchParams<{ mealType?: MealType; date?: string }>();
@@ -32,8 +40,10 @@ export default function FoodsScreen() {
 
     const [activeTab, setActiveTab] = useState<TabType>('all');
     const [showForm, setShowForm] = useState(false);
+    const [showRecipeForm, setShowRecipeForm] = useState(false);
     const [editingFood, setEditingFood] = useState<Food | null>(null);
-    const [addingFood, setAddingFood] = useState<Food | null>(null);
+    const [editingRecipe, setEditingRecipe] = useState<Recipe | null>(null);
+    const [addingItem, setAddingItem] = useState<Food | Recipe | null>(null);
     const isFirstRun = React.useRef(true);
 
     useEffect(() => {
@@ -46,6 +56,7 @@ export default function FoodsScreen() {
         else if (activeTab === 'favorites') loadFavorites();
         else if (activeTab === 'recent') loadRecent();
         else if (activeTab === 'frequent') loadFrequent();
+        else if (activeTab === 'recipes') loadRecipes();
     }, [activeTab]);
 
     const handleToggleFavorite = async (id: number) => {
@@ -93,54 +104,83 @@ export default function FoodsScreen() {
     };
 
     const renderContent = () => {
-        if (loading && foods.length === 0) {
+        const isLoading = activeTab === 'recipes' ? recipesLoading : foodsLoading;
+        const currentError = activeTab === 'recipes' ? recipesError : foodsError;
+        const rawData = activeTab === 'recipes' ? recipes : foods;
+        const currentData = Array.isArray(rawData) ? rawData : [];
+
+        if (isLoading && (!currentData || currentData.length === 0)) {
             return (
                 <View className="flex-1 items-center justify-center p-8">
                     <ActivityIndicator size="large" color="#16a34a" />
-                    <Text className="text-gray-500 dark:text-gray-400 mt-4">Cargando alimentos...</Text>
+                    <Text className="text-gray-500 dark:text-gray-400 mt-4">Cargando...</Text>
                 </View>
             );
         }
 
-        if (error) {
+        if (currentError) {
             return (
                 <View className="flex-1 items-center justify-center p-8">
-                    <Text className="text-red-500 text-center">{error}</Text>
-                    <TouchableOpacity onPress={() => refresh()} className="mt-4 px-4 py-2 bg-red-50 rounded-lg">
+                    <Text className="text-red-500 text-center">{currentError}</Text>
+                    <TouchableOpacity onPress={() => activeTab === 'recipes' ? loadRecipes() : refresh()} className="mt-4 px-4 py-2 bg-red-50 rounded-lg">
                         <Text className="text-red-600 font-medium">Reintentar</Text>
                     </TouchableOpacity>
                 </View>
             );
         }
 
-        if (foods.length === 0) {
+        if (!currentData || currentData.length === 0) {
             return (
                 <View className="flex-1 items-center justify-center p-8">
                     <View className="bg-gray-100 dark:bg-zinc-900 p-4 rounded-full mb-4">
                         <PackageOpen size={48} color="#9ca3af" />
                     </View>
-                    <Text className="text-lg font-bold text-black dark:text-white mb-2">No hay alimentos en esta lista</Text>
-                    <Text className="text-gray-500 dark:text-gray-400 text-center">Intenta cambiar de filtro o agrega nuevos alimentos.</Text>
+                    <Text className="text-lg font-bold text-black dark:text-white mb-2">
+                        {activeTab === 'recipes' ? 'No tienes recetas' : 'No hay alimentos en esta lista'}
+                    </Text>
+                    <Text className="text-gray-500 dark:text-gray-400 text-center">
+                        {activeTab === 'recipes' ? 'Crea tu primera receta para empezar.' : 'Intenta cambiar de filtro o agrega nuevos alimentos.'}
+                    </Text>
                 </View>
             );
         }
 
         return (
             <FlatList
-                data={foods}
+                data={currentData}
                 keyExtractor={(item) => item.id?.toString() || Math.random().toString()}
                 contentContainerStyle={{ padding: 16 }}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                    <FoodCard
-                        food={item}
-                        isFavorite={item.id ? favoriteIds.includes(item.id) : false}
-                        onToggleFavorite={handleToggleFavorite}
-                        onEdit={isPickerMode ? undefined : handleEdit}
-                        onDelete={isPickerMode ? undefined : handleDelete}
-                        onAddToDailyLog={isPickerMode ? () => setAddingFood(item) : undefined}
-                    />
-                )}
+                renderItem={({ item }) => {
+                    if (activeTab === 'recipes') {
+                        return (
+                            <RecipeCard
+                                recipe={item as Recipe}
+                                onEdit={(r) => {
+                                    setEditingRecipe(r);
+                                    setShowRecipeForm(true);
+                                }}
+                                onDelete={(r) => {
+                                    Alert.alert('Eliminar receta', '¿Estás seguro?', [
+                                        { text: 'No' },
+                                        { text: 'Sí', onPress: () => deleteRecipe(r.id) }
+                                    ]);
+                                }}
+                                onAdd={isPickerMode ? (r) => setAddingItem(r) : undefined}
+                            />
+                        );
+                    }
+                    return (
+                        <FoodCard
+                            food={item as Food}
+                            isFavorite={item.id ? favoriteIds.includes(item.id) : false}
+                            onToggleFavorite={handleToggleFavorite}
+                            onEdit={isPickerMode ? undefined : handleEdit}
+                            onDelete={isPickerMode ? undefined : handleDelete}
+                            onAddToDailyLog={isPickerMode ? () => setAddingItem(item as Food) : undefined}
+                        />
+                    );
+                }}
             />
         );
     };
@@ -150,6 +190,7 @@ export default function FoodsScreen() {
         { label: 'Favoritos', value: 'favorites' },
         { label: 'Recientes', value: 'recent' },
         { label: 'Frecuentes', value: 'frequent' },
+        { label: 'Recetas', value: 'recipes' },
     ];
 
     return (
@@ -157,9 +198,9 @@ export default function FoodsScreen() {
             {isPickerMode && (
                 <View className="bg-green-600 px-4 py-3 flex-row items-center justify-between">
                     <Text className="text-white font-semibold">
-                        Añadiendo a: <Text className="font-bold">{pickerMealType.replace('_', ' ')}</Text>
+                        Añadiendo a: <Text className="font-bold">{(String(pickerMealType || '')).replace('_', ' ')}</Text>
                     </Text>
-                    <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="p-1 bg-white/20 rounded-full">
+                    <TouchableOpacity onPress={() => router.push('/(tabs)/daily-log')} className="p-1 bg-green-700 rounded-full">
                         <X size={16} color="white" />
                     </TouchableOpacity>
                 </View>
@@ -169,7 +210,15 @@ export default function FoodsScreen() {
                 <View className="flex-row items-center justify-between mb-4">
                     <Text className="text-2xl font-bold text-black dark:text-white">Alimentos</Text>
                     <TouchableOpacity
-                        onPress={() => { setEditingFood(null); setShowForm(true); }}
+                        onPress={() => {
+                            if (activeTab === 'recipes') {
+                                setEditingRecipe(null);
+                                setShowRecipeForm(true);
+                            } else {
+                                setEditingFood(null);
+                                setShowForm(true);
+                            }
+                        }}
                         className="h-9 w-9 bg-green-600 rounded-full items-center justify-center shadow-sm"
                     >
                         <Plus size={20} color="white" />
@@ -222,15 +271,25 @@ export default function FoodsScreen() {
                 initialData={editingFood}
             />
 
+            <RecipeFormModal
+                visible={showRecipeForm}
+                onClose={() => {
+                    setShowRecipeForm(false);
+                    setEditingRecipe(null);
+                }}
+                onSuccess={() => loadRecipes()}
+                initialData={editingRecipe}
+            />
+
             {isPickerMode && (
                 <AddFoodToLogModal
-                    visible={!!addingFood}
-                    food={addingFood}
+                    visible={!!addingItem}
+                    item={addingItem}
                     mealType={pickerMealType as MealType}
                     targetDate={pickerDate}
-                    onClose={() => setAddingFood(null)}
+                    onClose={() => setAddingItem(null)}
                     onSuccess={() => {
-                        setAddingFood(null);
+                        setAddingItem(null);
                         router.push('/(tabs)/daily-log');
                     }}
                 />
