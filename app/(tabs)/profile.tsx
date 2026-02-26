@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { LogOut, Moon, Sun, Monitor, Save, Flame, Target, User, TrendingUp, ChevronRight } from 'lucide-react-native';
+import { LogOut, Moon, Sun, Monitor, Save, Flame, Target, User, TrendingUp, ChevronRight, Trophy, LayoutTemplate } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import userProfileService from '../../services/userProfileService';
@@ -295,6 +295,26 @@ export default function ProfileScreen() {
                         {saving ? 'Guardando...' : 'Guardar cambios'}
                     </Text>
                 </TouchableOpacity>
+
+                {/* Progress */}
+                <SectionCard title="🏆 Mi Progreso">
+                    <TouchableOpacity onPress={() => router.push('/achievements')}
+                        className="flex-row items-center justify-between py-2 border-b border-gray-50 dark:border-zinc-900 mb-2">
+                        <View className="flex-row items-center gap-3">
+                            <Trophy size={18} color="#eab308" />
+                            <Text className="text-black dark:text-white font-medium">Logros Desbloqueados</Text>
+                        </View>
+                        <ChevronRight size={18} color="#9ca3af" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.push('/meal-templates')}
+                        className="flex-row items-center justify-between py-2">
+                        <View className="flex-row items-center gap-3">
+                            <LayoutTemplate size={18} color="#8b5cf6" />
+                            <Text className="text-black dark:text-white font-medium">Mis Plantillas de Comidas</Text>
+                        </View>
+                        <ChevronRight size={18} color="#9ca3af" />
+                    </TouchableOpacity>
+                </SectionCard>
 
                 {/* Preferences */}
                 <SectionCard title="⚙️ Preferencias">

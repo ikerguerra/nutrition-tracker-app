@@ -1,12 +1,13 @@
-import React, { useMemo } from 'react';
-import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useDailyLog } from '../../hooks/useDailyLog';
+import { useMealTemplates } from '../../hooks/useMealTemplates';
 import DailyLogSummary from '../../components/daily-log/DailyLogSummary';
 import MealSection from '../../components/daily-log/MealSection';
 import { MealType, MealEntry } from '../../types/dailyLog';
-import { Calendar } from 'lucide-react-native';
+import { Calendar, Save, X } from 'lucide-react-native';
 import { useColorScheme } from 'nativewind';
 
 // Native date formatter – avoids date-fns ESM/CJS Metro issues
@@ -16,9 +17,17 @@ const formatDateEs = (date: Date): string => {
 
 export default function DailyLogScreen() {
     const { dailyLog, loading, error, loadDailyLog, updateEntry, deleteEntry } = useDailyLog();
+    const { createTemplate } = useMealTemplates();
     const router = useRouter();
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
+
+    // State for Save as Template Modal
+    const [templateModalVisible, setTemplateModalVisible] = useState(false);
+    const [savingTemplate, setSavingTemplate] = useState(false);
+    const [templateName, setTemplateName] = useState('');
+    const [templateDescription, setTemplateDescription] = useState('');
+    const [templateSource, setTemplateSource] = useState<{ mealType: MealType, title: string, entries: MealEntry[] } | null>(null);
 
     const groupedMeals = useMemo(() => {
         const defaults: Record<MealType, MealEntry[]> = {
@@ -42,6 +51,40 @@ export default function DailyLogScreen() {
             pathname: '/(tabs)/foods',
             params: { mealType, date: dateStr }
         });
+    };
+
+    const handleSaveAsTemplate = (mealType: MealType, title: string, entries: MealEntry[]) => {
+        setTemplateSource({ mealType, title, entries });
+        setTemplateName(`${title} Guardado`);
+        setTemplateDescription('');
+        setTemplateModalVisible(true);
+    };
+
+    const confirmSaveTemplate = async () => {
+        if (!templateName.trim() || !templateSource) {
+            Alert.alert('Error', 'El nombre de la plantilla es obligatorio');
+            return;
+        }
+
+        setSavingTemplate(true);
+        try {
+            await createTemplate({
+                name: templateName.trim(),
+                description: templateDescription.trim(),
+                mealType: templateSource.mealType,
+                items: templateSource.entries.map(e => ({
+                    foodId: e.foodId,
+                    quantity: e.quantity,
+                    unit: e.unit,
+                }))
+            });
+            Alert.alert('Éxito', 'Plantilla guardada correctamente');
+            setTemplateModalVisible(false);
+        } catch (e: any) {
+            Alert.alert('Error', e.message || 'No se pudo guardar la plantilla');
+        } finally {
+            setSavingTemplate(false);
+        }
     };
 
     const displayDate = React.useMemo(() => {
@@ -84,6 +127,7 @@ export default function DailyLogScreen() {
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}
+                            onSaveAsTemplate={handleSaveAsTemplate}
                         />
 
                         <MealSection
@@ -93,6 +137,7 @@ export default function DailyLogScreen() {
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}
+                            onSaveAsTemplate={handleSaveAsTemplate}
                         />
 
                         <MealSection
@@ -102,6 +147,7 @@ export default function DailyLogScreen() {
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}
+                            onSaveAsTemplate={handleSaveAsTemplate}
                         />
 
                         <MealSection
@@ -111,6 +157,7 @@ export default function DailyLogScreen() {
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}
+                            onSaveAsTemplate={handleSaveAsTemplate}
                         />
 
                         <MealSection
@@ -120,10 +167,62 @@ export default function DailyLogScreen() {
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}
+                            onSaveAsTemplate={handleSaveAsTemplate}
                         />
                     </>
                 )}
             </ScrollView>
+
+            {/* Save Template Modal */}
+            <Modal visible={templateModalVisible} transparent animationType="slide">
+                <View className="flex-1 justify-end bg-black/50">
+                    <View className="bg-white dark:bg-zinc-900 rounded-t-3xl p-6">
+                        <View className="flex-row justify-between items-center mb-6">
+                            <Text className="text-xl font-bold text-black dark:text-white">Guardar Plantilla</Text>
+                            <TouchableOpacity onPress={() => setTemplateModalVisible(false)} className="p-2 bg-gray-100 dark:bg-zinc-800 rounded-full">
+                                <X size={20} color={isDark ? 'white' : 'black'} />
+                            </TouchableOpacity>
+                        </View>
+
+                        <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Nombre de la plantilla</Text>
+                        <TextInput
+                            value={templateName}
+                            onChangeText={setTemplateName}
+                            placeholder="Ej. Mi desayuno de lunes a viernes"
+                            placeholderTextColor={isDark ? '#52525b' : '#9ca3af'}
+                            className="bg-gray-100 dark:bg-zinc-800 text-black dark:text-white p-4 rounded-xl mb-4 font-medium"
+                        />
+
+                        <Text className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Descripción (opcional)</Text>
+                        <TextInput
+                            value={templateDescription}
+                            onChangeText={setTemplateDescription}
+                            placeholder="Añade algún detalle adicional"
+                            placeholderTextColor={isDark ? '#52525b' : '#9ca3af'}
+                            multiline
+                            numberOfLines={3}
+                            className="bg-gray-100 dark:bg-zinc-800 text-black dark:text-white p-4 rounded-xl mb-6 font-medium text-left align-top"
+                        />
+
+                        <View className="flex-row gap-3">
+                            <TouchableOpacity
+                                onPress={() => setTemplateModalVisible(false)}
+                                className="flex-1 p-4 rounded-xl bg-gray-100 dark:bg-zinc-800 items-center"
+                            >
+                                <Text className="font-bold text-gray-700 dark:text-gray-300">Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={confirmSaveTemplate}
+                                disabled={savingTemplate}
+                                className="flex-1 p-4 rounded-xl bg-indigo-600 items-center flex-row justify-center gap-2"
+                            >
+                                {savingTemplate ? <ActivityIndicator size="small" color="white" /> : <Save size={18} color="white" />}
+                                <Text className="font-bold text-white">{savingTemplate ? 'Guardando...' : 'Guardar'}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </SafeAreaView>
     );
 }

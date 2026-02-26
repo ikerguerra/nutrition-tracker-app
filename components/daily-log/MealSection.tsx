@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { Plus, ChevronRight } from 'lucide-react-native';
+import { Plus, ChevronRight, LayoutTemplate } from 'lucide-react-native';
 import { MealEntry, MealType } from '../../types/dailyLog';
 import MealEntryCard from './MealEntryCard';
 import { useColorScheme } from 'nativewind';
@@ -12,6 +12,7 @@ interface MealSectionProps {
     onUpdate: (id: number, entry: { quantity: number; unit: string }) => Promise<void>;
     onDelete: (id: number) => Promise<void>;
     onAddFood: (mealType: MealType) => void;
+    onSaveAsTemplate?: (mealType: MealType, title: string, entries: MealEntry[]) => void;
 }
 
 const MealSection: React.FC<MealSectionProps> = ({
@@ -20,7 +21,8 @@ const MealSection: React.FC<MealSectionProps> = ({
     entries,
     onUpdate,
     onDelete,
-    onAddFood
+    onAddFood,
+    onSaveAsTemplate
 }) => {
     const { colorScheme } = useColorScheme();
     const isDark = colorScheme === 'dark';
@@ -40,6 +42,11 @@ const MealSection: React.FC<MealSectionProps> = ({
                 </View>
                 <View className="flex-row items-center gap-3">
                     <Text className="text-sm font-semibold text-black dark:text-white">{totalCalories} kcal</Text>
+                    {entries.length > 0 && onSaveAsTemplate && (
+                        <TouchableOpacity onPress={() => onSaveAsTemplate(mealType, title, entries)} className="p-1 rounded-full bg-indigo-100 dark:bg-indigo-900/40">
+                            <LayoutTemplate size={16} color={isDark ? '#818cf8' : '#4f46e5'} />
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity onPress={() => onAddFood(mealType)} className="p-1 rounded-full bg-green-500">
                         <Plus size={16} color="white" />
                     </TouchableOpacity>
