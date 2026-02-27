@@ -32,11 +32,9 @@ export default function DailyLogScreen() {
     const groupedMeals = useMemo(() => {
         const defaults: Record<MealType, MealEntry[]> = {
             BREAKFAST: [],
-            MORNING_SNACK: [],
             LUNCH: [],
-            AFTERNOON_SNACK: [],
+            SNACK: [],
             DINNER: [],
-            SNACK: [], // keeping for backwards compatibility
         };
 
         if (!dailyLog || !dailyLog.meals) {
@@ -131,16 +129,6 @@ export default function DailyLogScreen() {
                         />
 
                         <MealSection
-                            title="Media Mañana"
-                            mealType="MORNING_SNACK"
-                            entries={groupedMeals.MORNING_SNACK}
-                            onUpdate={updateEntry}
-                            onDelete={deleteEntry}
-                            onAddFood={handleAddFood}
-                            onSaveAsTemplate={handleSaveAsTemplate}
-                        />
-
-                        <MealSection
                             title="Almuerzo"
                             mealType="LUNCH"
                             entries={groupedMeals.LUNCH}
@@ -151,9 +139,9 @@ export default function DailyLogScreen() {
                         />
 
                         <MealSection
-                            title="Merienda"
-                            mealType="AFTERNOON_SNACK"
-                            entries={groupedMeals.AFTERNOON_SNACK}
+                            title="Snack"
+                            mealType="SNACK"
+                            entries={groupedMeals.SNACK}
                             onUpdate={updateEntry}
                             onDelete={deleteEntry}
                             onAddFood={handleAddFood}

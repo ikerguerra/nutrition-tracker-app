@@ -1,4 +1,4 @@
-export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK' | 'MORNING_SNACK' | 'AFTERNOON_SNACK';
+export type MealType = 'BREAKFAST' | 'LUNCH' | 'DINNER' | 'SNACK';
 
 export interface Food {
     id: number;

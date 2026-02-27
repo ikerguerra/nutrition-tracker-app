@@ -72,7 +72,7 @@ const AddFoodToLogModal: React.FC<AddFoodToLogModalProps> = ({
 
     const mealTypeLabels: Record<string, string> = {
         BREAKFAST: 'Desayuno', LUNCH: 'Almuerzo', DINNER: 'Cena',
-        MORNING_SNACK: 'Merienda (Mañana)', AFTERNOON_SNACK: 'Merienda (Tarde)', SNACK: 'Snack'
+        SNACK: 'Snack'
     };
 
     return (

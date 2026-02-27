@@ -45,9 +45,7 @@
             "BREAKFAST": "Breakfast",
             "LUNCH": "Lunch",
             "DINNER": "Dinner",
-            "SNACK": "Snack",
-            "MORNING_SNACK": "Morning Snack",
-            "AFTERNOON_SNACK": "Afternoon Snack"
+            "SNACK": "Snack"
         },
         "addFood": "Add Food",
         "editFood": "Edit Food",

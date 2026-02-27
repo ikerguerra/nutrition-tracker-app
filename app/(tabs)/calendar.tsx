@@ -23,7 +23,6 @@ const getMonthLabel = (date: Date) =>
 
 const mealTypeLabels: Record<string, string> = {
     BREAKFAST: 'Desayuno', LUNCH: 'Almuerzo', DINNER: 'Cena',
-    MORNING_SNACK: 'Merienda', AFTERNOON_SNACK: 'Merienda tarde',
     SNACK: 'Snack', '': 'Cualquier momento'
 };
 
@@ -33,8 +32,6 @@ const mealTypeBg: Record<string, string> = {
     LUNCH: '#dbeafe',       // blue-100
     DINNER: '#f3e8ff',      // purple-100
     SNACK: '#dcfce7',       // green-100
-    MORNING_SNACK: '#dcfce7',
-    AFTERNOON_SNACK: '#dcfce7',
     '': '#f3f4f6',           // gray-100
 };
 const mealTypeBgDark: Record<string, string> = {
@@ -42,8 +39,6 @@ const mealTypeBgDark: Record<string, string> = {
     LUNCH: '#172554',      // blue-950
     DINNER: '#3b0764',     // purple-950
     SNACK: '#052e16',      // green-950
-    MORNING_SNACK: '#052e16',
-    AFTERNOON_SNACK: '#052e16',
     '': '#27272a',          // zinc-800
 };
 const mealTypeText: Record<string, string> = {
@@ -51,8 +46,6 @@ const mealTypeText: Record<string, string> = {
     LUNCH: '#1d4ed8',      // blue-700
     DINNER: '#7e22ce',     // purple-700
     SNACK: '#15803d',      // green-700
-    MORNING_SNACK: '#15803d',
-    AFTERNOON_SNACK: '#15803d',
     '': '#374151',          // gray-700
 };
 const mealTypeTextDark: Record<string, string> = {
@@ -60,8 +53,6 @@ const mealTypeTextDark: Record<string, string> = {
     LUNCH: '#60a5fa',      // blue-400
     DINNER: '#c084fc',     // purple-400
     SNACK: '#4ade80',      // green-400
-    MORNING_SNACK: '#4ade80',
-    AFTERNOON_SNACK: '#4ade80',
     '': '#d1d5db',          // gray-300
 };
 

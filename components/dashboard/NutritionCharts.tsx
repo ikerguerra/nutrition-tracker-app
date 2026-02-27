@@ -51,8 +51,6 @@ export const NutritionCharts = ({ dailyLog }: NutritionChartsProps) => {
             case 'LUNCH': return 'Alm.';
             case 'DINNER': return 'Cen.';
             case 'SNACK': return 'Snk.';
-            case 'MORNING_SNACK': return 'M.Ma.';
-            case 'AFTERNOON_SNACK': return 'Mer.';
             default: return type.substring(0, 4);
         }
     };

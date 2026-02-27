@@ -122,20 +122,26 @@ const FoodFormModal: React.FC<FoodFormModalProps> = ({ visible, onClose, onSucce
     const handleSubmit = async () => {
         if (!formData.name.trim()) return;
 
+        const parseNutrient = (val: string) => {
+            if (val === '' || val === null || val === undefined) return undefined;
+            const parsed = parseFloat(val);
+            return isNaN(parsed) ? undefined : parsed;
+        };
+
         const foodData = {
             name: formData.name.trim(),
             brand: formData.brand.trim() || undefined,
             barcode: formData.barcode.trim() || undefined,
-            servingSize: parseFloat(formData.servingSize) || 100,
+            servingSize: parseNutrient(formData.servingSize) || 100,
             servingUnit: formData.servingUnit,
             nutritionalInfo: {
-                calories: parseFloat(formData.nutritionalInfo.calories) || undefined,
-                protein: parseFloat(formData.nutritionalInfo.protein) || undefined,
-                carbohydrates: parseFloat(formData.nutritionalInfo.carbohydrates) || undefined,
-                fats: parseFloat(formData.nutritionalInfo.fats) || undefined,
-                fiber: parseFloat(formData.nutritionalInfo.fiber) || undefined,
-                sugars: parseFloat(formData.nutritionalInfo.sugars) || undefined,
-                sodium: parseFloat(formData.nutritionalInfo.sodium) || undefined,
+                calories: parseNutrient(formData.nutritionalInfo.calories),
+                protein: parseNutrient(formData.nutritionalInfo.protein),
+                carbohydrates: parseNutrient(formData.nutritionalInfo.carbohydrates),
+                fats: parseNutrient(formData.nutritionalInfo.fats),
+                fiber: parseNutrient(formData.nutritionalInfo.fiber),
+                sugars: parseNutrient(formData.nutritionalInfo.sugars),
+                sodium: parseNutrient(formData.nutritionalInfo.sodium),
             }
         };
 

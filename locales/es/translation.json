@@ -45,9 +45,7 @@
             "BREAKFAST": "Desayuno",
             "LUNCH": "Almuerzo",
             "DINNER": "Cena",
-            "SNACK": "Snack",
-            "MORNING_SNACK": "Media Mañana",
-            "AFTERNOON_SNACK": "Merienda"
+            "SNACK": "Snack"
         },
         "addFood": "Añadir Alimento",
         "editFood": "Editar Alimento",
